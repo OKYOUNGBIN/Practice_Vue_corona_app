@@ -1,11 +1,12 @@
 <template>
-  <h1>Hello Corona</h1>
+  <BasicLayout />
 </template>
 
 <script>
+import BasicLayout from "./components/layouts/BasicLayout.vue";
 export default {
   name: "App",
-  components: {},
+  components: { BasicLayout },
 };
 </script>
 
