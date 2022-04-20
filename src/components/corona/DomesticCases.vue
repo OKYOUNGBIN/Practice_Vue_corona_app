@@ -3,7 +3,11 @@
     <ul class="graph-list">
       <li>
         <h3>누적 확진/사망자 추이</h3>
-        <ChartGraph />
+        <ChartGraph :chartOptions="domesticCases" :key="caseKey" />
+      </li>
+      <li>
+        <h3>확진자 대비 사망자</h3>
+        <ChartGraph :chartOptions="domesticCompare" :key="compareKey" />
       </li>
     </ul>
   </div>
@@ -24,6 +28,65 @@ export default {
       monthDifference: 4,
       domesitcData: [],
     };
+  },
+  computed: {
+    domesticCases() {
+      return {
+        type: "line",
+        labels: this.domesitcData.map((dom) =>
+          dom.Date.split("T")[0].substr(0, 7)
+        ),
+        datasets: [
+          {
+            label: "확진자",
+            data: this.domesitcData.map((dom) => dom.Confirmed),
+            borderWidth: 1,
+            backgroundColor: ["rgba(54,162,235,0.2)"],
+            borderColor: ["rgba(54,162,235,1)"],
+          },
+          {
+            label: "사망자",
+            data: this.domesitcData.map((dom) => dom.Deaths),
+            borderWidth: 1,
+            backgroundColor: ["rgba(255,99,132,0.2)"],
+            borderColor: ["rgba(255,99,132,1)"],
+          },
+        ],
+      };
+    },
+    domesticCompare() {
+      const lastMonth = this.domesitcData[this.domesitcData.length - 1] || {};
+      const deaths = lastMonth.Deaths;
+      const confirmed = lastMonth.Confirmed;
+      const data = [deaths, confirmed];
+      return {
+        type: "doughnut",
+        labels: ["사망자", "확진자"],
+        datasets: [
+          {
+            label: "확진자 대비 사망자",
+            data,
+            borderWidth: 1,
+            backgroundColor: ["rgba(255,99,123,0.2)", "rgba(54,162,235,0.2)"],
+            borderColor: ["rgba(255,99,123,1)", "rgba(54,162,235,1)"],
+          },
+        ],
+      };
+    },
+  },
+  watch: {
+    domesticCases: {
+      handler() {
+        this.caseKey++;
+      },
+      deep: true,
+    },
+    domesticCompare: {
+      handler() {
+        this.compareKey++;
+      },
+      deep: true,
+    },
   },
   mounted() {
     this.fetchDomestic();
