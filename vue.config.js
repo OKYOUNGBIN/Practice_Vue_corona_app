@@ -4,6 +4,6 @@
 // });
 
 module.exports = {
-  publicPath: process.env.NODE_ENV === "Porudctgion" ? "/vue-vorona-app" : "/",
+  publicPath: process.env.NODE_ENV === "Porudction" ? "/vue-vorona-app" : "/",
   outputDir: "docs",
 };
